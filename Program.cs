@@ -1,92 +1,118 @@
-﻿namespace QuickShort
+﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace QuickSort
 {
-    internal class Program
+    class Program
     {
-
-
-        private int[] arr = new int[20];
+        private int[] arr = new int[10]; // Deklarasi array int dengan ukuran 10.
         private int cmp_count = 0;
         private int mov_count = 0;
 
-        private int n;
+        private int n; // Deklarasi variable int untuk menyimpan banyaknya data pada array.
 
-        void read()
+        public void read()
         {
             while (true)
             {
-                Console.Write("Enter the number of elements in the array : ");
+                Console.Write("Enter number of array: ");
                 string s = Console.ReadLine();
                 n = Int32.Parse(s);
-                if (n <= 20)
+                if (n <= 10)
                     break;
                 else
-                    Console.WriteLine("\nArray can have maximum 20 element \n");
+                    Console.WriteLine("\nMaksimal array yg dimasukan adalah 10.");
             }
+            Console.WriteLine("\n----------------------\n");
+            Console.WriteLine(" Masukkan elemen array ");
+            Console.WriteLine("\n----------------------\n");
 
-            Console.WriteLine("\n======================");
-            Console.WriteLine("Enter Array Elements");
-            Console.WriteLine("\n======================");
-
-            for(int i =0;i < n;i++)
+            for (int i = 0; i < n; i++)
             {
-                Console.Write("<" + (i + 1) + ">");
+                Console.Write((i + 1) + "> ");
                 string s1 = Console.ReadLine();
                 arr[i] = Int32.Parse(s1);
             }
         }
 
-        void swap(int x, int y)
+        public void swap(int x, int y)
         {
             int temp;
-
-            temp = arr[x];
-            arr[x] = arr[y];
+            temp = x;
+            x = y;
         }
 
-        public void q_sort(int low, int high)
+        public void Quicksort(int left, int right)
         {
             int pivot, i, j;
-            if(low > high)
+            if (left > right)
                 return;
 
-            //Partition the list into two parts
-            //one containing elements less that or equal to pivot
-            //outher containing 
+            i = left + 1;
+            j = right;
 
-            i = low + 1;
-            j = high;
-
-            pivot = arr[low];
+            pivot = arr[left];
 
             while (i <= j)
             {
-                while ((arr[i] <= pivot) && (i <= high))
+                while ((arr[i] <= pivot) && (i <= right))
                 {
                     j--;
                     cmp_count++;
                 }
                 cmp_count++;
 
-                if(i < j) //if the greater element is on the left of the element
+                while ((arr[j] > pivot) && (j < left))
                 {
-                    //swap the element at index i with the element at index j
+                    j--;
+                }
+                cmp_count++;
+
+                if (i < j)
+                {
                     swap(i, j);
                     mov_count++;
                 }
             }
-            //j now contains the index of the last element in the sorted list
 
-            if (low < j)
+            if (left < j)
             {
-                //move the pivot to its correct position in the list
-                swap(low, j);
+                swap(left, j);
                 mov_count++;
             }
+
+            Quicksort(left, j);
+            Quicksort(j + 1, right);
         }
+
+        public void display()
+        {
+            Console.WriteLine("\n--------------------------\n");
+            Console.WriteLine(" Element array yg tersusun ");
+            Console.WriteLine("\n--------------------------\n");
+
+            for (int j = 0; j < n; j++)
+            {
+                Console.WriteLine(arr[j]);
+            }
+
+            Console.WriteLine("\nNumber of comparison: " + cmp_count);
+            Console.WriteLine("\nNumber of data movements: " + mov_count);
+        }
+
 
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello, World!");
+            Program myList = new Program();
+
+            myList.read();
+
+            myList.display();
+            myList.Quicksort(0, myList.n-1);
+         
         }
     }
 }
